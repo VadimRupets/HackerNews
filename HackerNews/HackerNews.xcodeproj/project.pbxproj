@@ -12,7 +12,6 @@
 		DD1BBF9C204D4D500059903E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD1BBF9A204D4D500059903E /* Main.storyboard */; };
 		DD1BBF9E204D4D500059903E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD1BBF9D204D4D500059903E /* Assets.xcassets */; };
 		DD1BBFA1204D4D500059903E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD1BBF9F204D4D500059903E /* LaunchScreen.storyboard */; };
-		DD1BBFAC204D4D500059903E /* HackerNewsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1BBFAB204D4D500059903E /* HackerNewsTests.swift */; };
 		DD1BBFB8204D4F680059903E /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1BBFB7204D4F680059903E /* Request.swift */; };
 		DD1BBFBA204D4FB70059903E /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1BBFB9204D4FB70059903E /* HTTPMethod.swift */; };
 		DD1BBFBC204D51A50059903E /* StoriesRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1BBFBB204D51A50059903E /* StoriesRequests.swift */; };
@@ -32,6 +31,7 @@
 		DD1BBFDB204D84F90059903E /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1BBFB9204D4FB70059903E /* HTTPMethod.swift */; };
 		DD1BBFDC204D84FD0059903E /* NetworkErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1BBFBF204D52F30059903E /* NetworkErrors.swift */; };
 		DD1BBFDE204D850F0059903E /* MockRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1BBFDD204D850F0059903E /* MockRequests.swift */; };
+		DD1BBFE0204D87240059903E /* DispatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1BBFDF204D87240059903E /* DispatcherTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,7 +53,6 @@
 		DD1BBFA0204D4D500059903E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DD1BBFA2204D4D500059903E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DD1BBFA7204D4D500059903E /* HackerNewsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HackerNewsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		DD1BBFAB204D4D500059903E /* HackerNewsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HackerNewsTests.swift; sourceTree = "<group>"; };
 		DD1BBFAD204D4D500059903E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DD1BBFB7204D4F680059903E /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		DD1BBFB9204D4FB70059903E /* HTTPMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
@@ -69,6 +68,7 @@
 		DD1BBFCE204D7F310059903E /* StoryRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryRequest.swift; sourceTree = "<group>"; };
 		DD1BBFD4204D83AF0059903E /* MockDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDispatcher.swift; sourceTree = "<group>"; };
 		DD1BBFDD204D850F0059903E /* MockRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRequests.swift; sourceTree = "<group>"; };
+		DD1BBFDF204D87240059903E /* DispatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatcherTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,10 +125,9 @@
 		DD1BBFAA204D4D500059903E /* HackerNewsTests */ = {
 			isa = PBXGroup;
 			children = (
-				DD1BBFAB204D4D500059903E /* HackerNewsTests.swift */,
+				DD1BBFE1204D8B910059903E /* Mocks */,
+				DD1BBFDF204D87240059903E /* DispatcherTests.swift */,
 				DD1BBFAD204D4D500059903E /* Info.plist */,
-				DD1BBFD4204D83AF0059903E /* MockDispatcher.swift */,
-				DD1BBFDD204D850F0059903E /* MockRequests.swift */,
 			);
 			path = HackerNewsTests;
 			sourceTree = "<group>";
@@ -189,6 +188,15 @@
 				DD1BBFCC204D7F0C0059903E /* StoryOperation.swift */,
 			);
 			path = Operations;
+			sourceTree = "<group>";
+		};
+		DD1BBFE1204D8B910059903E /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				DD1BBFDD204D850F0059903E /* MockRequests.swift */,
+				DD1BBFD4204D83AF0059903E /* MockDispatcher.swift */,
+			);
+			path = Mocks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -317,10 +325,10 @@
 			files = (
 				DD1BBFD5204D83AF0059903E /* MockDispatcher.swift in Sources */,
 				DD1BBFD7204D83DD0059903E /* Request.swift in Sources */,
+				DD1BBFE0204D87240059903E /* DispatcherTests.swift in Sources */,
 				DD1BBFDB204D84F90059903E /* HTTPMethod.swift in Sources */,
 				DD1BBFDE204D850F0059903E /* MockRequests.swift in Sources */,
 				DD1BBFDC204D84FD0059903E /* NetworkErrors.swift in Sources */,
-				DD1BBFAC204D4D500059903E /* HackerNewsTests.swift in Sources */,
 				DD1BBFD6204D83D60059903E /* Dispatcher.swift in Sources */,
 				DD1BBFD8204D84020059903E /* Response.swift in Sources */,
 			);
