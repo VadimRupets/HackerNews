@@ -9,7 +9,7 @@
 import Foundation
 
 struct Story: Decodable {
-    let id: String
+    let id: Int
     let isDeleted: Bool?
     let isDead: Bool?
     let url: URL
@@ -27,7 +27,7 @@ struct Story: Decodable {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
-        id = try values.decode(String.self, forKey: .id)
+        id = try values.decode(Int.self, forKey: .id)
 
         let isDeletedString = (try? values.decode(String.self, forKey: .isDeleted)) ?? ""
         isDeleted = Bool(isDeletedString)
@@ -35,7 +35,8 @@ struct Story: Decodable {
         let isDeadString = (try? values.decode(String.self, forKey: .isDead)) ?? ""
         isDead = Bool(isDeadString)
 
-        let urlString = try values.decode(String.self, forKey: .url)
+        var urlString = try values.decode(String.self, forKey: .url)
+        urlString = urlString.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed) ?? ""
         guard let url = URL(string: urlString) else {
             throw DecodingError.dataCorruptedError(forKey: CodingKeys.url, in: values, debugDescription: "Cannot decode received URL")
         }

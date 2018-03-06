@@ -18,11 +18,11 @@ public enum StoriesRequests: Request {
     public var path: String {
         switch self {
         case .newStories:
-            return "/newstories.json"
+            return "newstories.json"
         case .topStories:
-            return "/topstories.json"
+            return "topstories.json"
         case .bestStories:
-            return "/beststories.json"
+            return "beststories.json"
         }
     }
 

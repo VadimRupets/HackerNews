@@ -9,7 +9,7 @@
 import Foundation
 
 class StoriesOperation: Operation {
-    typealias ResponseObject = [String]
+    typealias ResponseObject = [Int]
 
     var request: Request
 
@@ -17,7 +17,7 @@ class StoriesOperation: Operation {
         self.request = request
     }
 
-    func execute(in discpatcher: Dispatcher, completionHandler: @escaping (([String]?, Error?) -> ())) {
+    func execute(in discpatcher: Dispatcher, completionHandler: @escaping (([Int]?, Error?) -> ())) {
         guard Reachability.isReachable else {
             completionHandler(nil, NetworkError.noInternetConnection)
             return
@@ -31,7 +31,7 @@ class StoriesOperation: Operation {
                 case .data(let data):
                     let jsonDecoder = JSONDecoder()
                     do {
-                        let stories = try jsonDecoder.decode([String].self, from: data)
+                        let stories = try jsonDecoder.decode([Int].self, from: data)
                         completionHandler(stories, nil)
                     } catch {
                         completionHandler(nil, error)

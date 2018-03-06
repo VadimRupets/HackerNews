@@ -30,9 +30,12 @@ public class NetworkDispatcher: Dispatcher {
 
     public func execute(request: Request, completionHandler: @escaping ((Response) -> ())) throws {
         let urlRequest = try prepateURLRequest(with: request)
-        session.dataTask(with: urlRequest) {
+        
+        let dataTask = session.dataTask(with: urlRequest) {
             completionHandler(Response.init(data: $0, error: $2))
         }
+        
+        dataTask.resume()
     }
 
 }
