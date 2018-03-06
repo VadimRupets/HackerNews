@@ -18,7 +18,7 @@ public class NetworkDispatcher: Dispatcher {
     private let session = URLSession(configuration: .default)
 
     private func prepateURLRequest(with request: Request) throws -> URLRequest {
-        guard let requestURL = URL.init(string: host + request.path) else {
+        guard let requestURL = URL(string: host + request.path) else {
             throw NetworkError.badInput
         }
 
@@ -32,7 +32,7 @@ public class NetworkDispatcher: Dispatcher {
         let urlRequest = try prepateURLRequest(with: request)
         
         let dataTask = session.dataTask(with: urlRequest) {
-            completionHandler(Response.init(data: $0, error: $2))
+            completionHandler(Response(data: $0, error: $2))
         }
         
         dataTask.resume()

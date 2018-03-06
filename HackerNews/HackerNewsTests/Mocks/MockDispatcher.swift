@@ -13,7 +13,7 @@ class MockDispatcher: Dispatcher {
     let host = "https://example.com"
 
     private func prepateURLRequest(with request: Request) throws -> URLRequest {
-        guard let requestURL = URL.init(string: host + request.path) else {
+        guard let requestURL = URL(string: host + request.path) else {
             throw NetworkError.badInput
         }
 
