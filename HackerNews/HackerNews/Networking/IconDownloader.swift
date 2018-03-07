@@ -10,37 +10,49 @@ import Foundation
 import UIKit
 
 class IconDownloader {
-
-    func downloadIcon(from siteURL: URL, completionHandler: ((UIImage) -> ())) throws {
+    
+    func downloadIcon(from siteURL: URL, completionHandler: ((UIImage) -> ())) {
         guard
             let scheme = siteURL.scheme,
             let host = siteURL.host,
-            let baseURL = URL(string: "\(scheme)://\(host)") else { throw NetworkError.badInput }
+            let baseURL = URL(string: "\(scheme)://\(host)") else {
+                completionHandler(#imageLiteral(resourceName: "placeholder"))
+                return
+        }
         
-        let htmlSourceCode = try String.init(contentsOf: siteURL)
+        guard let htmlSourceCode = try? String(contentsOf: siteURL) else {
+            completionHandler(#imageLiteral(resourceName: "placeholder"))
+            return
+        }
         let tags = htmlSourceCode.split(separator: "<")
         
-        let iconTag: Substring?
-        
-        if let appleTouchIconTag = tags.first(where: { $0.contains("apple-touch-icon") }) {
-            iconTag = appleTouchIconTag
-        } else if let faviconTag = tags.first(where: { $0.contains("favicon") }) {
-            iconTag = faviconTag
-        } else {
-            throw NetworkError.noData
-        }
+        let iconTag = tags.first(where: { tag in
+            return (tag.contains("rel=\"apple-touch-icon\"") ||
+                tag.contains("favicon") ||
+                tag.contains("rel=\"icon\"") ||
+                tag.contains("rel=\"shortcut icon\"")) && tag.contains("href")
+        })
         
         guard
             let iconHref = iconTag?
                 .split(separator: " ")
                 .first(where: { $0.contains("href") })?
-                .components(separatedBy: "\"")[safe: 1],
-            let iconURL = URL.init(string: iconHref, relativeTo: baseURL) else {
-                throw NetworkError.noData
+                .components(separatedBy: "\"")[safe: 1] else {
+                completionHandler(#imageLiteral(resourceName: "placeholder"))
+                return
         }
         
-        let iconData = try Data(contentsOf: iconURL)
-        guard let icon = UIImage.init(data: iconData) else { throw NetworkError.noData }
+        guard let iconURL = URL(string: iconHref, relativeTo: baseURL) else  {
+            completionHandler(#imageLiteral(resourceName: "placeholder"))
+            return
+        }
+        
+        guard
+            let iconData = try? Data(contentsOf: iconURL),
+            let icon = UIImage(data: iconData) else {
+                completionHandler(#imageLiteral(resourceName: "placeholder"))
+                return
+        }
         
         completionHandler(icon)
     }

@@ -25,6 +25,8 @@ class NewsViewController: UITableViewController {
         return activityIndicator
     }()
     
+    let cache = NSCache<AnyObject, UIImage>()
+    
     var storiesRequest = StoriesRequests.topStories
     
     var stories: [Story] = []
@@ -66,7 +68,26 @@ class NewsViewController: UITableViewController {
             return UITableViewCell()
         }
         
-        cell.configure(with: story)
+        cell.titleLabel.text = story.title
+        
+        if let cachedIcon = cache.object(forKey: story.id as AnyObject) {
+            cell.iconImageView.image = cachedIcon
+        } else {
+            cell.activityIndicator.startAnimating()
+            
+            DispatchQueue.global().async {
+                IconDownloader().downloadIcon(from: story.url, completionHandler: { icon in
+                    DispatchQueue.main.async { [weak self] in
+                        self?.cache.setObject(icon, forKey: story.id as AnyObject)
+                        
+                        cell.activityIndicator.stopAnimating()
+                        if let _ = tableView.cellForRow(at: indexPath) {
+                            cell.iconImageView.image = icon
+                        }
+                    }
+                })
+            }
+        }
         
         return cell
     }
@@ -134,7 +155,7 @@ class NewsViewController: UITableViewController {
         }
         
         let storiesCountBefore = stories.count
-        let storiesIdsToFetch = Array(storiesIds[startIndex...endIndex])
+        let storiesIdsToFetch = Array(storiesIds[startIndex..<endIndex])
         
         let dispatchGroup = DispatchGroup()
         storiesIdsToFetch.forEach {
@@ -160,19 +181,8 @@ class NewsViewController: UITableViewController {
                 self?.tableView.tableFooterView = UIView()
             }
             
-            guard startIndex != 0 else {
-                self?.tableView.reloadData()
-                self?.storiesLoaded = endIndex
-                return
-            }
-            
-            guard let storiesCount = self?.stories.count else { return }
-            
-            let indexesToReload = storiesCountBefore..<storiesCount
-            let indexPathsToInsert = indexesToReload.map { return IndexPath(row: $0, section: 0) }
-            
             self?.storiesLoaded = endIndex
-            self?.tableView.insertRows(at: indexPathsToInsert, with: .none)
+            self?.tableView.reloadData()
         }
     }
     
