@@ -11,22 +11,44 @@ import SafariServices
 
 class NewsViewController: UITableViewController {
     
+    lazy var tableViewBackgroundActivityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        activityIndicator.hidesWhenStopped = true
+        
+        return activityIndicator
+    }()
+    
+    lazy var tableViewFooterActivityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 44))
+        activityIndicator.activityIndicatorViewStyle = .gray
+        
+        return activityIndicator
+    }()
+    
     var storiesRequest = StoriesRequests.topStories
     
     var stories: [Story] = []
     var storiesIds: [Int] = [] {
         didSet {
-            fetchStories(startIndex: 0, endIndex: storiesPerPage)
+            let endIndex = min(storiesPerPage, storiesIds.count)
+            fetchStories(startIndex: 0, endIndex: endIndex)
         }
     }
     
     private let storiesPerPage = 20
+    private let reloadDistance: CGFloat = 88
+    
     private var storiesLoaded = 0
+    
+    private var isLoadingNextPage = false
     
     // MARK: - View life cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.backgroundView = tableViewBackgroundActivityIndicator
+        tableView.tableFooterView = UIView()
         
         fetchStoriesIds()
     }
@@ -38,7 +60,6 @@ class NewsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         guard
             let cell = tableView.dequeueReusableCell(withIdentifier: StoryTableViewCell.identifier, for: indexPath) as? StoryTableViewCell,
             let story = stories[safe: indexPath.row] else {
@@ -59,11 +80,36 @@ class NewsViewController: UITableViewController {
         present(safariViewController, animated: true, completion: nil)
     }
     
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard
+            !isLoadingNextPage,
+            storiesIds.count > storiesLoaded else { return }
+        
+        let yOffset = scrollView.contentOffset.y
+        let scrollViewHeight = scrollView.bounds.height
+        let contentSizeHeight = scrollView.contentSize.height
+        let bottomInset = scrollView.contentInset.bottom
+        
+        if yOffset + scrollViewHeight + bottomInset + reloadDistance > contentSizeHeight {
+            let endIndex = min(storiesIds.count, storiesLoaded + storiesPerPage)
+            fetchStories(startIndex: storiesLoaded, endIndex: endIndex)
+        }
+    }
+    
     // MARK: - Networking
     
     @IBAction func fetchStoriesIds() {
+        tableViewBackgroundActivityIndicator.startAnimating()
+        
         let storiesOperation = StoriesOperation(request: storiesRequest)
         storiesOperation.execute(in: NetworkDispatcher()) { [weak self] ids, error in
+            defer {
+                DispatchQueue.main.async {
+                    self?.refreshControl?.endRefreshing()
+                    self?.tableViewBackgroundActivityIndicator.stopAnimating()
+                }
+            }
+            
             guard error == nil else {
                 self?.showErrorAlert(with: error?.localizedDescription)
                 return
@@ -76,14 +122,17 @@ class NewsViewController: UITableViewController {
             
             self?.storiesIds = storiesIds
             self?.stories = []
-            
-            DispatchQueue.main.async {
-                self?.refreshControl?.endRefreshing()
-            }
         }
     }
     
     func fetchStories(startIndex: Int, endIndex: Int) {
+        isLoadingNextPage = true
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.tableFooterView = self?.tableViewFooterActivityIndicator
+            self?.tableViewFooterActivityIndicator.startAnimating()
+        }
+        
         let storiesCountBefore = stories.count
         let storiesIdsToFetch = Array(storiesIds[startIndex...endIndex])
         
@@ -98,7 +147,6 @@ class NewsViewController: UITableViewController {
                 }
                 
                 guard let story = story else {
-                    print("")
                     return
                 }
                 
@@ -107,8 +155,14 @@ class NewsViewController: UITableViewController {
         }
         
         dispatchGroup.notify(queue: .main) { [weak self] in
+            defer {
+                self?.isLoadingNextPage = false
+                self?.tableView.tableFooterView = UIView()
+            }
+            
             guard startIndex != 0 else {
                 self?.tableView.reloadData()
+                self?.storiesLoaded = endIndex
                 return
             }
             
@@ -117,8 +171,8 @@ class NewsViewController: UITableViewController {
             let indexesToReload = storiesCountBefore..<storiesCount
             let indexPathsToInsert = indexesToReload.map { return IndexPath(row: $0, section: 0) }
             
-            self?.storiesLoaded += self?.storiesPerPage ?? 0
-            self?.tableView.insertRows(at: indexPathsToInsert, with: .automatic)
+            self?.storiesLoaded = endIndex
+            self?.tableView.insertRows(at: indexPathsToInsert, with: .none)
         }
     }
     
