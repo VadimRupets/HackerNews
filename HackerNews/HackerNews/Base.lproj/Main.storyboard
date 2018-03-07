@@ -85,6 +85,12 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="News" largeTitleDisplayMode="always" id="aVO-G5-6uW"/>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="1td-0c-zAq">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <action selector="fetchStoriesIds" destination="tdm-l0-xpm" eventType="valueChanged" id="9bp-If-Vhg"/>
+                        </connections>
+                    </refreshControl>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vlk-Kt-kkL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

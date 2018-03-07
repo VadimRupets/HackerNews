@@ -10,7 +10,7 @@ import UIKit
 import SafariServices
 
 class NewsViewController: UITableViewController {
-
+    
     var storiesRequest = StoriesRequests.topStories
     
     var stories: [Story] = []
@@ -31,12 +31,6 @@ class NewsViewController: UITableViewController {
         fetchStoriesIds()
     }
     
-    // MARK: - Internal UI
-    
-    func configureNavigationBar() {
-        
-    }
-    
     // MARK: - UITableViewDataSource
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -44,11 +38,13 @@ class NewsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: StoryTableViewCell.identifier, for: indexPath) as? StoryTableViewCell else {
+        
+        guard
+            let cell = tableView.dequeueReusableCell(withIdentifier: StoryTableViewCell.identifier, for: indexPath) as? StoryTableViewCell,
+            let story = stories[safe: indexPath.row] else {
             return UITableViewCell()
         }
         
-        let story = stories[indexPath.row]
         cell.configure(with: story)
         
         return cell
@@ -65,7 +61,7 @@ class NewsViewController: UITableViewController {
     
     // MARK: - Networking
     
-    func fetchStoriesIds() {
+    @IBAction func fetchStoriesIds() {
         let storiesOperation = StoriesOperation(request: storiesRequest)
         storiesOperation.execute(in: NetworkDispatcher()) { [weak self] ids, error in
             guard error == nil else {
@@ -79,6 +75,11 @@ class NewsViewController: UITableViewController {
             }
             
             self?.storiesIds = storiesIds
+            self?.stories = []
+            
+            DispatchQueue.main.async {
+                self?.refreshControl?.endRefreshing()
+            }
         }
     }
     
@@ -106,6 +107,11 @@ class NewsViewController: UITableViewController {
         }
         
         dispatchGroup.notify(queue: .main) { [weak self] in
+            guard startIndex != 0 else {
+                self?.tableView.reloadData()
+                return
+            }
+            
             guard let storiesCount = self?.stories.count else { return }
             
             let indexesToReload = storiesCountBefore..<storiesCount
