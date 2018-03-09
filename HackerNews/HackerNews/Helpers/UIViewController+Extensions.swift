@@ -22,7 +22,7 @@ extension UIViewController {
         let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
         alertController.addAction(okAction)
         
-        show(alertController, sender: nil)
+        present(alertController, animated: true, completion: nil)
     }
     
 }
