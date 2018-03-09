@@ -154,7 +154,6 @@ class NewsViewController: UITableViewController {
             self?.tableViewFooterActivityIndicator.startAnimating()
         }
         
-        let storiesCountBefore = stories.count
         let storiesIdsToFetch = Array(storiesIds[startIndex..<endIndex])
         
         let dispatchGroup = DispatchGroup()
