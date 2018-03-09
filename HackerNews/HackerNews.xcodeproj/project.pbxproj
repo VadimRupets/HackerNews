@@ -11,6 +11,7 @@
 		AC02056F204DD5D400E878C4 /* StoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC02056E204DD5D400E878C4 /* StoryTableViewCell.swift */; };
 		AC020577204EA95400E878C4 /* IconDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC020576204EA95400E878C4 /* IconDownloader.swift */; };
 		AC020579204EB05C00E878C4 /* Collection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC020578204EB05C00E878C4 /* Collection+Extensions.swift */; };
+		AC0D195D20500EA5006B6C7D /* IconDownloaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0D195C20500EA5006B6C7D /* IconDownloaderTests.swift */; };
 		DD1BBF97204D4D500059903E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1BBF96204D4D500059903E /* AppDelegate.swift */; };
 		DD1BBF9C204D4D500059903E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD1BBF9A204D4D500059903E /* Main.storyboard */; };
 		DD1BBF9E204D4D500059903E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD1BBF9D204D4D500059903E /* Assets.xcassets */; };
@@ -53,6 +54,7 @@
 		AC02056E204DD5D400E878C4 /* StoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryTableViewCell.swift; sourceTree = "<group>"; };
 		AC020576204EA95400E878C4 /* IconDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconDownloader.swift; sourceTree = "<group>"; };
 		AC020578204EB05C00E878C4 /* Collection+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extensions.swift"; sourceTree = "<group>"; };
+		AC0D195C20500EA5006B6C7D /* IconDownloaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconDownloaderTests.swift; sourceTree = "<group>"; };
 		DD1BBF93204D4D500059903E /* HackerNews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HackerNews.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD1BBF96204D4D500059903E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DD1BBF9B204D4D500059903E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 			children = (
 				DD1BBFE1204D8B910059903E /* Mocks */,
 				DD1BBFDF204D87240059903E /* DispatcherTests.swift */,
+				AC0D195C20500EA5006B6C7D /* IconDownloaderTests.swift */,
 				DD1BBFAD204D4D500059903E /* Info.plist */,
 			);
 			path = HackerNewsTests;
@@ -364,6 +367,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD1BBFD5204D83AF0059903E /* MockDispatcher.swift in Sources */,
+				AC0D195D20500EA5006B6C7D /* IconDownloaderTests.swift in Sources */,
 				DD1BBFD7204D83DD0059903E /* Request.swift in Sources */,
 				DD1BBFE0204D87240059903E /* DispatcherTests.swift in Sources */,
 				DD1BBFDB204D84F90059903E /* HTTPMethod.swift in Sources */,

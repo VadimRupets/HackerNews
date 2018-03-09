@@ -26,23 +26,30 @@ class IconDownloader {
         }
         let tags = htmlSourceCode.split(separator: "<")
         
-        let iconTag = tags.first(where: { tag in
-            return (tag.contains("rel=\"apple-touch-icon\"") ||
-                tag.contains("favicon") ||
-                tag.contains("rel=\"icon\"") ||
-                tag.contains("rel=\"shortcut icon\"")) && tag.contains("href")
+        var iconTag = tags.first(where: { tag in
+            return tag.contains("rel=\"apple-touch-icon\"")
         })
         
+        if iconTag == nil {
+            iconTag = tags.first(where: { tag in
+                return tag.contains("rel=\"icon\"") || tag.contains("rel=\"shortcut icon\"")
+            })
+        }
+        
         guard
-            let iconHref = iconTag?
-                .split(separator: " ")
+            var iconHref = iconTag?
+                .components(separatedBy: "\" ")
                 .first(where: { $0.contains("href") })?
                 .components(separatedBy: "\"")[safe: 1] else {
                 completionHandler(#imageLiteral(resourceName: "placeholder"))
                 return
         }
         
-        guard let iconURL = URL(string: iconHref, relativeTo: baseURL) else  {
+        iconHref = iconHref.hasPrefix(".") ? String(iconHref.dropFirst()) : iconHref
+        
+        guard
+            let percentEncodedIconHref = iconHref.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed),
+            let iconURL = URL(string: percentEncodedIconHref, relativeTo: baseURL) else  {
             completionHandler(#imageLiteral(resourceName: "placeholder"))
             return
         }
